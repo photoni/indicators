@@ -1,4 +1,4 @@
-package analysis
+package org.photoni.indicators.analysis
 
 /**
  * Stocastic Oscillator indicator.

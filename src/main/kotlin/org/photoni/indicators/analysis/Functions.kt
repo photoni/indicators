@@ -1,4 +1,4 @@
-package analysis
+package org.photoni.indicators.analysis
 
 object Functions {
     /**

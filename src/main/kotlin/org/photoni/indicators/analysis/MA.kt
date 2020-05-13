@@ -1,4 +1,4 @@
-package analysis
+package org.photoni.indicators.analysis
 
 /**
  * Indicators functions based on moving averages
