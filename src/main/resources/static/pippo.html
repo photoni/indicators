@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pippo</title>
+</head>
+<body>
+<canvas id="myChart">
+</canvas>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.bundle.min.js"></script>
+<script>
+        var data= {
+        "datasets": [
+          {
+            "label": "My First Dataset",
+            "data": [
+              {
+                "x": 10,
+                "y": 20
+              },
+              {
+                "x": 15,
+                "y": 10
+              },
+              {
+                "x": 20,
+                "y": 12
+              },
+              {
+                "x": 25,
+                "y": 10
+              },
+              {
+                "x": 30,
+                "y": 16
+              },
+              {
+                "x": 35,
+                "y": 17
+              },
+              {
+                "x": 40,
+                "y": 20
+              }
+            ],
+            "fill": false,
+            "borderColor": "rgb(75, 192, 192)",
+            "lineTension": 0.1
+          }
+        ]
+      };
+        var ctx = document.getElementById('myChart');
+        var myLineChart = new Chart(ctx, {
+        type: 'line',
+        data: data,
+        options: {scales: {
+            xAxes: [{
+                type: 'linear',
+                position: 'bottom'
+            }]
+        }}
+});
+</script>
+</body>
+</html>
