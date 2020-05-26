@@ -22,15 +22,24 @@ object Repository {
     fun download(ticker: String) {
         val url = URL_TEMPLATE.format(ticker)
         val fileUrl = FILE_URL_TEMPLATE.format(ticker)
-        var inputStream: InputStream = NetworkUtil.readURL(url);
+        val inputStream: InputStream = NetworkUtil.readURL(url)
 
-        var file: File = File(fileUrl);
+        val file = File(fileUrl)
 
-        var fos = FileOutputStream(file)
+        val fos = FileOutputStream(file)
         inputStream.use { input ->
             fos.use { output -> input.copyTo(output) }
         }
 
+    }
+    /**
+     * Download historical time-series
+     * @param ticker
+     */
+    fun load(ticker: String):ByteArray {
+        val fileUrl = FILE_URL_TEMPLATE.format(ticker)
+        val file = File(fileUrl)
+        return file.readBytes()
     }
 
 
