@@ -12,11 +12,22 @@ class PriceHistoryConverterTest {
     fun convert() {
         val ticker = "MSFT"
         var timeSeries:List<Any> =Repository.loadTimeSeries(ticker)
-        val result: List<Any> = PriceHistoryConverter.convert(timeSeries)
+        val result: List<Any> = PriceHistoryConverter.convert(timeSeries,PriceHistoryConverter.FormatMode.DATEVALUE)
         result.forEach {
             println(it)
         }
     }
+
+    @Test
+    fun convertXY() {
+        val ticker = "MSFT"
+        var timeSeries:List<Any> =Repository.loadTimeSeries(ticker)
+        val result: List<Any> = PriceHistoryConverter.convert(timeSeries,PriceHistoryConverter.FormatMode.XY)
+        result.forEach {
+            println(it)
+        }
+    }
+
 
 
 }

@@ -1,5 +1,37 @@
 {{> header}}
-<h1>{{title}}</h1>
+<div class="ct-chart ct-perfect-fourth"></div>
+<script>
+      var dataset={{{dataset}}};
+
+
+      new Chartist.Line('.ct-chart', {
+      series: [dataset]
+      }, {   chartPadding: 5,
+          height: '800px',
+          axisX: {
+            type: Chartist.AutoScaleAxis,
+            onlyInteger: true,
+            scaleMinSpace: 60
+          },
+          axisY: {
+            showGrid: false,
+            // Turning off the units here to make it a smaller trendline.
+            offset: 0,
+            labelInterpolationFnc: function(value, index) {
+                return null;
+            }
+          },
+          plugins: [
+              Chartist.plugins.zoom({
+                resetOnRightMouseBtn: false,
+                onZoom : function(chart, reset) { storeReset(reset); }
+              })
+          ]
+      });
+
+
+
+</script>
 
 {{> footer}}
 

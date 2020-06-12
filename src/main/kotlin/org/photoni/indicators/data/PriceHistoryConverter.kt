@@ -1,9 +1,9 @@
 package org.photoni.indicators.data
 
-import com.trendrating.commons.JsonUtil
+import com.trendrating.commons.TimeUtils
 
 object PriceHistoryConverter {
-    fun convert(timeSeries: List<Any>): List<Any> {
+    fun convert(timeSeries: List<Any>, mode: FormatMode): List<Any> {
         var timeSeries1 = timeSeries
         timeSeries1 = timeSeries1.reversed()
         var result: MutableList<Any> = mutableListOf()
@@ -11,16 +11,29 @@ object PriceHistoryConverter {
             val list = it as List<Any>
             val v = list[11] as Double
             val d = list[0] as String
-            val entry = formatEntry(v, d)
+            val entry = formatEntry(v, d,mode)
             result.add(entry)
         }
         return result
     }
 
-    private fun formatEntry(y: Double, x: Any): MutableMap<String, Any> {
+    private fun formatEntry(y: Double, x: Any, mode: FormatMode): MutableMap<String, Any> {
         val entry = mutableMapOf<String, Any>()
-        entry["v"] = y
-        entry["d"] = x
+        when (mode) {
+            FormatMode.DATEVALUE -> {
+                entry["y"] = y
+                entry["x"] = x
+            }
+            FormatMode.XY -> {
+                val sbDay=TimeUtils.ISODateToSBDay(x as String)
+                entry["y"] = y
+                entry["x"] = sbDay
+            }
+        }
         return entry
+    }
+
+    enum class FormatMode {
+        DATEVALUE, XY
     }
 }
