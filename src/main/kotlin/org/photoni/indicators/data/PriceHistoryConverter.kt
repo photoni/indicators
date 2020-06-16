@@ -15,6 +15,15 @@ object PriceHistoryConverter {
         }
         return result
     }
+    fun extractValues(timeSeries: List<Map<String,Any>>): Array<Double> {
+
+        var result :Array<Double> = arrayOfNulls<Double>(timeSeries.size) as Array<Double>
+        timeSeries.forEachIndexed { index, element ->
+           val y= element["y"];
+            result[index]=y as Double
+        }
+        return result
+    }
 
     private fun formatEntry(y: Double, x: Any, mode: FormatMode): MutableMap<String, Any> {
         val entry = mutableMapOf<String, Any>()

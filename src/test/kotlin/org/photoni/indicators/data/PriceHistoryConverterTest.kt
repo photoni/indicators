@@ -28,6 +28,17 @@ class PriceHistoryConverterTest {
         }
     }
 
+    @Test
+    fun convertAndExtractValues() {
+        val ticker = "MSFT"
+        var timeSeries:List<Any> =Repository.loadTimeSeries(ticker)
+        val timeSeriesConverted: List<Any> = PriceHistoryConverter.convert(timeSeries,PriceHistoryConverter.FormatMode.DATEVALUE)
+        var result :Array<Double> = PriceHistoryConverter.extractValues(timeSeriesConverted as List<Map<String, Any>>);
+        result.forEach {
+            println(it)
+        }
+    }
+
 
 
 }
