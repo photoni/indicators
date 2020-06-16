@@ -1,5 +1,7 @@
 package org.photoni.indicators.analysis
 
+import org.photoni.indicators.analysis.support.Functions
+
 /**
  * Aroon indicator.
  *

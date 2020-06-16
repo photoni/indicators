@@ -5,7 +5,6 @@ import com.trendrating.commons.TimeUtils
 object PriceHistoryConverter {
     fun convert(timeSeries: List<Any>, mode: FormatMode): List<Any> {
         var timeSeries1 = timeSeries
-        timeSeries1 = timeSeries1.reversed()
         var result: MutableList<Any> = mutableListOf()
         timeSeries1.forEach {
             val list = it as List<Any>

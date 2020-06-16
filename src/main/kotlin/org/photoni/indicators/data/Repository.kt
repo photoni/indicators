@@ -54,7 +54,25 @@ object Repository {
         val file = File(fileUrl)
         val historyString= String(file.readBytes())
         val history: Map<String, Any> = JsonUtilTr.fromJackson(historyString,Map::class.java) as Map<String, Any>
-        return MapUtil.extractT(history,"dataset","data")
+        val timeSeries = MapUtil.extractT<List<Any>>(history, "dataset", "data")
+        return timeSeries.reversed()
+    }
+
+    /**
+     * load historical data
+     * @param ticker
+     */
+    fun loadTimeSeries(ticker: String,length: Int): List<Any> {
+        val timeSeries= loadTimeSeries(ticker)
+        return cutTimeSeries(timeSeries,length)
+    }
+    /**
+     * cut historical data
+     * @param ticker
+     */
+    fun cutTimeSeries(list: List<Any>,length : Int): List<Any> {
+
+        return  list.subList(list.size-length,list.size)
     }
 
 

@@ -8,6 +8,8 @@
       series: [dataset]
       }, {   chartPadding: 5,
           height: '800px',
+          showPoint: false,
+          fullWidth: true,
           axisX: {
             type: Chartist.AutoScaleAxis,
             onlyInteger: true,
@@ -23,7 +25,7 @@
           },
           plugins: [
               Chartist.plugins.zoom({
-                resetOnRightMouseBtn: false,
+                resetOnRightMouseBtn: true,
                 onZoom : function(chart, reset) { storeReset(reset); }
               })
           ]
