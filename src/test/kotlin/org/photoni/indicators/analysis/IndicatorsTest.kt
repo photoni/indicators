@@ -1,6 +1,8 @@
 package org.photoni.indicators.analysis
 
 import org.junit.jupiter.api.Test
+import org.photoni.indicators.data.PriceHistoryConverter
+import org.photoni.indicators.data.Repository
 import java.util.*
 
 class IndicatorsTest {
@@ -12,6 +14,16 @@ class IndicatorsTest {
         val arr = doubleArrayOf(11.0,12.0,13.0,14.0,15.0,16.0,17.0)
         var sma = MA.sma(n, arr)
         println("result ${sma.contentToString()}")
+    }
+
+    @Test
+    fun smaTicker() {
+        val n=5;
+        val ticker = "MSFT"
+        var timeSeries:List<Any> = Repository.loadTimeSeries(ticker)
+        val timeSeriesConverted: List<Any> = PriceHistoryConverter.convert(timeSeries, PriceHistoryConverter.FormatMode.DATEVALUE)
+        var result :DoubleArray = PriceHistoryConverter.extractValuesAsDoubleArray(timeSeriesConverted as List<Map<String, Any>>);
+        var sma = MA.sma(n, result);
     }
 
     @Test

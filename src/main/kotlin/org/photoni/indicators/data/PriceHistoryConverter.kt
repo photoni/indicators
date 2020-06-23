@@ -3,15 +3,15 @@ package org.photoni.indicators.data
 import com.trendrating.commons.TimeUtils
 
 object PriceHistoryConverter {
-    fun convert(timeSeries: List<Any>, mode: FormatMode): List<Any> {
-        var timeSeries1 = timeSeries
-        var result: MutableList<Any> = mutableListOf()
-        timeSeries1.forEach {
+    fun convert(timeSeries: List<Any>, mode: FormatMode): ArrayList<Any> {
+
+        var result = ArrayList<Any>(timeSeries.size)
+        timeSeries.forEachIndexed { index,it ->
             val list = it as List<Any>
             val v = list[11] as Double
             val d = list[0] as String
             val entry = formatEntry(v, d,mode)
-            result.add(entry)
+            result[index]=entry
         }
         return result
     }
@@ -21,6 +21,27 @@ object PriceHistoryConverter {
         timeSeries.forEachIndexed { index, element ->
            val y= element["y"];
             result[index]=y as Double
+        }
+        return result
+    }
+
+    fun extractValuesAsDoubleArray(timeSeries: List<Map<String,Any>>): DoubleArray {
+
+        var result :DoubleArray = DoubleArray(timeSeries.size)
+        timeSeries.forEachIndexed { index, element ->
+            val y= element["y"];
+            result[index]=y as Double
+        }
+        return result
+    }
+
+    fun mergeValues(timeSeries: List<Map<String,Any>>, values : DoubleArray):List<Map<String,Any>> {
+        var result = ArrayList<Map<String,Any>>()
+        timeSeries.forEachIndexed { index, element ->
+            val map= mutableMapOf<String,Any>()
+            map.put("y",values[index])
+            element.get("x")?.let { map.put("x", it) }
+            result[index]=map
         }
         return result
     }
