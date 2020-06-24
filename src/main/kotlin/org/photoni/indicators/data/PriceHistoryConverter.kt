@@ -1,47 +1,50 @@
 package org.photoni.indicators.data
 
 import com.trendrating.commons.TimeUtils
+import java.util.*
+import kotlin.collections.ArrayList
 
 object PriceHistoryConverter {
-    fun convert(timeSeries: List<Any>, mode: FormatMode): ArrayList<Any> {
+    fun convert(timeSeries: List<Any>, mode: FormatMode): LinkedList<Any> {
 
-        var result = ArrayList<Any>(timeSeries.size)
-        timeSeries.forEachIndexed { index,it ->
+        var result = LinkedList<Any>()
+        timeSeries.forEach {
             val list = it as List<Any>
             val v = list[11] as Double
             val d = list[0] as String
-            val entry = formatEntry(v, d,mode)
-            result[index]=entry
-        }
-        return result
-    }
-    fun extractValues(timeSeries: List<Map<String,Any>>): Array<Double> {
-
-        var result :Array<Double> = arrayOfNulls<Double>(timeSeries.size) as Array<Double>
-        timeSeries.forEachIndexed { index, element ->
-           val y= element["y"];
-            result[index]=y as Double
+            val entry = formatEntry(v, d, mode)
+            result.add(entry)
         }
         return result
     }
 
-    fun extractValuesAsDoubleArray(timeSeries: List<Map<String,Any>>): DoubleArray {
+    fun extractValues(timeSeries: List<Map<String, Any>>): Array<Double> {
 
-        var result :DoubleArray = DoubleArray(timeSeries.size)
+        var result: Array<Double> = arrayOfNulls<Double>(timeSeries.size) as Array<Double>
         timeSeries.forEachIndexed { index, element ->
-            val y= element["y"];
-            result[index]=y as Double
+            val y = element["y"];
+            result[index] = y as Double
         }
         return result
     }
 
-    fun mergeValues(timeSeries: List<Map<String,Any>>, values : DoubleArray):List<Map<String,Any>> {
-        var result = ArrayList<Map<String,Any>>()
-        timeSeries.forEachIndexed { index, element ->
-            val map= mutableMapOf<String,Any>()
-            map.put("y",values[index])
-            element.get("x")?.let { map.put("x", it) }
-            result[index]=map
+    fun extractValuesAsDoubleArray(timeSeries: List<Map<String, Any>>): DoubleArray {
+
+        var result: DoubleArray = DoubleArray(timeSeries.size)
+        for((index, value) in timeSeries.listIterator().withIndex()) {
+            val y = value["y"];
+            result[index] = y as Double
+        }
+        return result
+    }
+
+    fun mergeValues(timeSeries: List<Map<String, Any>>, values: DoubleArray): List<Map<String, Any>> {
+        var result = LinkedList<Map<String, Any>>()
+        for((index, value) in timeSeries.listIterator().withIndex()) {
+            val map = mutableMapOf<String, Any>()
+            map["y"] = values[index]
+            value["x"]?.let { map.put("x", it) }
+            result.add(map)
         }
         return result
     }
@@ -54,7 +57,7 @@ object PriceHistoryConverter {
                 entry["x"] = x
             }
             FormatMode.XY -> {
-                val sbDay=TimeUtils.ISODateToSBDay(x as String)
+                val sbDay = TimeUtils.ISODateToSBDay(x as String)
                 entry["y"] = y
                 entry["x"] = sbDay
             }

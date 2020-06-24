@@ -4,8 +4,9 @@
       var dataset={{{dataset}}};
 
 
+
       new Chartist.Line('.ct-chart', {
-      series: [dataset]
+      series: dataset
       }, {   chartPadding: 5,
           height: '800px',
           showPoint: false,
@@ -33,8 +34,10 @@
 
 
 
+
+
 </script>
 
-{{> footer}}
+        {{> footer}}
 
 

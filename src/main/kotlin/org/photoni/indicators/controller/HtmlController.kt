@@ -14,24 +14,49 @@ import org.springframework.web.bind.annotation.RequestParam
 class HtmlController {
 
     @GetMapping("/")
-    fun index(model: Model, @RequestParam(required = false) ticker:String?, @RequestParam(required = false) indicators:String?): String {
-        val ticker = ticker?:"MSFT"
-        val indicatorsList=indicators?.split("'")
-        var timeSeries:List<Any> = Repository.loadTimeSeries(ticker,4000)
-        val result: List<Any> = PriceHistoryConverter.convert(timeSeries, PriceHistoryConverter.FormatMode.XY)
-        var dataset= mutableListOf<Any>()
-        dataset.add(result)
-        val values=PriceHistoryConverter.extractValuesAsDoubleArray(timeSeries as List<Map<String,Any>>);
+    fun index(model: Model, @RequestParam(required = false) ticker: String?, @RequestParam(required = false) overlays: String?): String {
+        val ticker = ticker ?: "MSFT"
+        val overlaysList = overlays?.split(",")
+        var timeSeries: List<Any> = Repository.loadTimeSeries(ticker, 4000)
+        val price: List<Any> = PriceHistoryConverter.convert(timeSeries, PriceHistoryConverter.FormatMode.XY)
+        var dataset = mutableListOf<Any>()
+        dataset.add(price)
+        val values = PriceHistoryConverter.extractValuesAsDoubleArray(price as List<Map<String, Any>>);
 
-        indicatorsList?.forEach({element ->
-            var res=DoubleArray(values.size)
-            when (element) {
-                "sma" -> res=MA.sma(6,values )
-            }
-            PriceHistoryConverter
-        })
-        model["dataset"] = JsonUtil.toJson(result)
+        computeOverlays(overlaysList, values, price as List<Map<String, Any>>, dataset)
+        model["dataset"] = JsonUtil.toJson(dataset).replace("-Infinity","0")
         return "index"
+    }
+
+    /**
+     * Computes the overlays specified in the [overlaysList] on the array of [values].
+     * Adds the result to the [dataset] with a format based on the [price] timeseries template
+     */
+    private fun computeOverlays(overlaysList: List<String>?, values: DoubleArray, price: List<Map<String, Any>>, dataset: MutableList<Any>) {
+        overlaysList?.forEach { element ->
+            var indicator = DoubleArray(values.size)
+            when (element) {
+                "sma_5" -> {
+                    indicator = MA.sma(5, values)
+
+                }
+                "sma_10" -> {
+                    indicator = MA.sma(10, values)
+
+                }
+                "sma_20" -> {
+                    indicator = MA.sma(20, values)
+
+                }
+                "sma_40" -> {
+                    indicator = MA.sma(20, values)
+
+                }
+            }
+
+            var indicatorPriceHistory = PriceHistoryConverter.mergeValues(price, indicator)
+            dataset.add(indicatorPriceHistory)
+        }
     }
 
 }
