@@ -9,6 +9,7 @@ import org.springframework.ui.Model
 import org.springframework.ui.set
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestParam
+import java.util.*
 
 @Controller
 class HtmlController {
@@ -19,12 +20,12 @@ class HtmlController {
         val overlaysList = overlays?.split(",")
         var timeSeries: List<Any> = Repository.loadTimeSeries(ticker, 4000)
         val price: List<Any> = PriceHistoryConverter.convert(timeSeries, PriceHistoryConverter.FormatMode.XY)
-        var dataset = mutableListOf<Any>()
+        var dataset = LinkedList<Any>()
         dataset.add(price)
         val values = PriceHistoryConverter.extractValuesAsDoubleArray(price as List<Map<String, Any>>);
 
         computeOverlays(overlaysList, values, price as List<Map<String, Any>>, dataset)
-        model["dataset"] = JsonUtil.toJson(dataset).replace("-Infinity","0")
+        model["datasetOverlays"] = JsonUtil.toJson(dataset).replace("-Infinity", "0")
         return "index"
     }
 
@@ -35,24 +36,16 @@ class HtmlController {
     private fun computeOverlays(overlaysList: List<String>?, values: DoubleArray, price: List<Map<String, Any>>, dataset: MutableList<Any>) {
         overlaysList?.forEach { element ->
             var indicator = DoubleArray(values.size)
-            when (element) {
-                "sma_5" -> {
-                    indicator = MA.sma(5, values)
-
-                }
-                "sma_10" -> {
-                    indicator = MA.sma(10, values)
-
-                }
-                "sma_20" -> {
-                    indicator = MA.sma(20, values)
-
-                }
-                "sma_40" -> {
-                    indicator = MA.sma(20, values)
-
-                }
+            if (element.startsWith("sma")) {
+                val tokens = element.split("_")
+                val n = Integer.parseInt(tokens[1])
+                indicator = MA.sma(n, values)
+            } else if (element.startsWith("ema")) {
+                val tokens = element.split("_")
+                val n = Integer.parseInt(tokens[1])
+                indicator = MA.ema(n, values)
             }
+
 
             var indicatorPriceHistory = PriceHistoryConverter.mergeValues(price, indicator)
             dataset.add(indicatorPriceHistory)

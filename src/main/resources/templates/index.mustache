@@ -1,12 +1,12 @@
 {{> header}}
 <div class="ct-chart ct-perfect-fourth"></div>
 <script>
-      var dataset={{{dataset}}};
+          var datasetOverlays={{{datasetOverlays}}};
 
 
 
       new Chartist.Line('.ct-chart', {
-      series: dataset
+      series: datasetOverlays
       }, {   chartPadding: 5,
           height: '800px',
           showPoint: false,
