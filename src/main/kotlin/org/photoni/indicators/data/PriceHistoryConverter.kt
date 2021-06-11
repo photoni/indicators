@@ -2,7 +2,6 @@ package org.photoni.indicators.data
 
 import com.trendrating.commons.TimeUtils
 import java.util.*
-import kotlin.collections.ArrayList
 
 object PriceHistoryConverter {
     fun convert(timeSeries: List<Any>, mode: FormatMode): LinkedList<Any> {
@@ -22,7 +21,7 @@ object PriceHistoryConverter {
 
         var result: Array<Double> = arrayOfNulls<Double>(timeSeries.size) as Array<Double>
         timeSeries.forEachIndexed { index, element ->
-            val y = element["y"];
+            val y = element["y"]
             result[index] = y as Double
         }
         return result
@@ -31,8 +30,8 @@ object PriceHistoryConverter {
     fun extractValuesAsDoubleArray(timeSeries: List<Map<String, Any>>): DoubleArray {
 
         var result: DoubleArray = DoubleArray(timeSeries.size)
-        for((index, value) in timeSeries.listIterator().withIndex()) {
-            val y = value["y"];
+        for ((index, value) in timeSeries.listIterator().withIndex()) {
+            val y = value["y"]
             result[index] = y as Double
         }
         return result
@@ -40,7 +39,7 @@ object PriceHistoryConverter {
 
     fun mergeValues(timeSeries: List<Map<String, Any>>, values: DoubleArray): List<Map<String, Any>> {
         var result = LinkedList<Map<String, Any>>()
-        for((index, value) in timeSeries.listIterator().withIndex()) {
+        for ((index, value) in timeSeries.listIterator().withIndex()) {
             val map = mutableMapOf<String, Any>()
             map["y"] = values[index]
             value["x"]?.let { map.put("x", it) }
@@ -49,6 +48,14 @@ object PriceHistoryConverter {
         return result
     }
 
+    /**
+     * Formats the entry according to the mode parameter.
+     * - with mode is DATEVALUE the entry is untouched
+     * - with mode is XY then the x is supposed to be in ISO Unix format YYYY-mm-dd and is transformed into SBDay
+     * @param y
+     * @param x
+     * @param mode How to format
+     */
     private fun formatEntry(y: Double, x: Any, mode: FormatMode): MutableMap<String, Any> {
         val entry = mutableMapOf<String, Any>()
         when (mode) {

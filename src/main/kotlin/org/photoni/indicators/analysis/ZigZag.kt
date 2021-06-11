@@ -1,5 +1,7 @@
 package org.photoni.indicators.analysis
 
+import kotlin.math.abs
+
 /**
  * ZigZag
  * Filters out movements smaller than a threshold
@@ -17,7 +19,7 @@ object ZigZag {
        var lastValue =arr[0]
        var lastIndex=0
        for ( i in 1 until arr.size){
-           if(((arr[i]-lastValue)/lastValue)< threshold)
+           if((abs((arr[i]-lastValue)/lastValue))< threshold)
                arr[i]=Double.NEGATIVE_INFINITY
            else{
 
