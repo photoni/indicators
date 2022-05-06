@@ -1,7 +1,9 @@
 {{> header}}
-<div class="ct-chart ct-perfect-fourth"></div>
+<div class="ct-chart"></div>
+<div class="ct-chart1"></div>
 <script>
           var datasetOverlays={{{datasetOverlays}}};
+          var datasetOscillators={{{datasetOscillators}}};
 
 
 
@@ -9,6 +11,33 @@
       series: datasetOverlays
       }, {   chartPadding: 5,
           height: '800px',
+          showPoint: false,
+          fullWidth: true,
+          axisX: {
+            type: Chartist.AutoScaleAxis,
+            onlyInteger: true,
+            scaleMinSpace: 60
+          },
+          axisY: {
+            showGrid: false,
+            // Turning off the units here to make it a smaller trendline.
+            offset: 0,
+            labelInterpolationFnc: function(value, index) {
+                return null;
+            }
+          },
+          plugins: [
+              Chartist.plugins.zoom({
+                resetOnRightMouseBtn: true,
+                onZoom : function(chart, reset) { storeReset(reset); }
+              })
+          ]
+      });
+
+      new Chartist.Line('.ct-chart1', {
+      series: datasetOscillators
+      }, {   chartPadding: 5,
+          height: '100px',
           showPoint: false,
           fullWidth: true,
           axisX: {

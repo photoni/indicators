@@ -2,6 +2,7 @@ package org.photoni.indicators.controller
 
 import com.trendrating.commons.JsonUtil
 import org.photoni.indicators.analysis.MA
+import org.photoni.indicators.analysis.SSO
 import org.photoni.indicators.analysis.ZigZag
 import org.photoni.indicators.data.PriceHistoryConverter
 import org.photoni.indicators.data.Repository
@@ -16,17 +17,21 @@ import java.util.*
 class HtmlController {
 
     @GetMapping("/")
-    fun index(model: Model, @RequestParam(required = false) ticker: String?, @RequestParam(required = false) overlays: String?): String {
+    fun index(model: Model, @RequestParam(required = false) ticker: String?, @RequestParam(required = false) overlays: String?,@RequestParam(required = false) oscillators: String?): String {
         val ticker = ticker ?: "MSFT"
         val overlaysList = overlays?.split(",")
+        val oscillatorList = oscillators?.split(",")
         var timeSeries: List<Any> = Repository.loadTimeSeries(ticker, 4000)
         val price: List<Any> = PriceHistoryConverter.convert(timeSeries, PriceHistoryConverter.FormatMode.XY)
         var dataset = LinkedList<Any>()
+        var datasetOscillators = LinkedList<Any>()
         dataset.add(price)
         val values = PriceHistoryConverter.extractValuesAsDoubleArray(price as List<Map<String, Any>>);
 
         computeOverlays(overlaysList, values, price as List<Map<String, Any>>, dataset)
+        computeOscillators(oscillatorList, values, price as List<Map<String, Any>>, datasetOscillators)
         model["datasetOverlays"] = JsonUtil.toJson(dataset).replace("-Infinity", "0")
+        model["datasetOscillators"] = JsonUtil.toJson(datasetOscillators).replace("-Infinity", "0")
         return "index"
     }
 
@@ -54,6 +59,26 @@ class HtmlController {
 
             var indicatorPriceHistory = PriceHistoryConverter.mergeValues(price, indicator)
             dataset.add(indicatorPriceHistory)
+        }
+    }
+
+    /**
+     * Computes the oscillator specified in the [oscillatorList] on the array of [values].
+     * Adds the result to the [dataset] with a format based on the [price] timeseries template
+     */
+    private fun computeOscillators(oscillatorList: List<String>?, values: DoubleArray, price: List<Map<String, Any>>, dataset: MutableList<Any>) {
+        oscillatorList?.forEach { element ->
+            var oscillator = DoubleArray(values.size)
+            if (element.startsWith("sso")) {
+                val tokens = element.split("_")
+                val n = Integer.parseInt(tokens[1])
+                oscillator = SSO.sso(values, n)
+            }
+
+
+
+            var oscillatorPriceHistory = PriceHistoryConverter.mergeValues(price, oscillator)
+            dataset.add(oscillatorPriceHistory)
         }
     }
 

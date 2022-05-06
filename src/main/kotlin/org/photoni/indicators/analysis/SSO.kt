@@ -26,7 +26,7 @@ object SSO {
      * Slow Stochastic oscillator signal
      * @param arr
      * @param days look-back period
-     * @return smooted Stochastic Oscillator
+     * @return smoothed Stochastic Oscillator
      */
     fun ssos(arr: DoubleArray, days: Int): DoubleArray {
         var ssos = DoubleArray(arr.size) { Double.NEGATIVE_INFINITY }
@@ -50,8 +50,7 @@ object SSO {
      */
     fun sso(arr: DoubleArray, days: Int): DoubleArray {
         var d = so(arr, days)
-        var sso = MA.sma(n3, d)
-        return sso
+        return MA.sma(n3, d)
     }
 
     /**
@@ -59,7 +58,7 @@ object SSO {
      * @param arr
      * @param days
      */
-    fun k(arr: DoubleArray, days: Int): DoubleArray {
+    private fun k(arr: DoubleArray, days: Int): DoubleArray {
         var ks = DoubleArray(arr.size) { Double.NEGATIVE_INFINITY }
         for (i in days - 1 until arr.size) {
             var highestHigh = Functions.highLow(i, days, arr, false)
@@ -77,10 +76,9 @@ object SSO {
      * @param arr
      * @param days
      */
-    fun so(arr: DoubleArray, days: Int): DoubleArray {
-        var ks = k(arr, days)
-        var d = MA.sma(n3, ks)
-        return d
+    private fun so(arr: DoubleArray, days: Int): DoubleArray {
+        var ks = k(arr, n14)
+        return MA.sma(n3, ks)
     }
 
 
