@@ -25,7 +25,7 @@ object SSO {
     /**
      * Slow Stochastic oscillator signal
      * @param arr
-     * @param days
+     * @param days look-back period
      * @return smooted Stochastic Oscillator
      */
     fun ssos(arr: DoubleArray, days: Int): DoubleArray {

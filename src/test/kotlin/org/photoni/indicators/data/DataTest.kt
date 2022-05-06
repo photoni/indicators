@@ -7,7 +7,7 @@ class DataTest {
 
     @Test
     fun data() {
-        val ticker = "MSFT"
+        val ticker = "AAPL"
         Repository.download(ticker)
 
 

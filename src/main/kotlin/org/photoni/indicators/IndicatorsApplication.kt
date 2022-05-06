@@ -7,5 +7,12 @@ import org.springframework.boot.runApplication
 class IndicatorsApplication
 
 fun main(args: Array<String>) {
-	runApplication<IndicatorsApplication>(*args)
+
+	try {
+		runApplication<IndicatorsApplication>(*args)
+	}catch (e: Exception){
+		e.printStackTrace()
+	}
+
+
 }

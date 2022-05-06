@@ -2,6 +2,7 @@ package org.photoni.indicators.controller
 
 import com.trendrating.commons.JsonUtil
 import org.photoni.indicators.analysis.MA
+import org.photoni.indicators.analysis.ZigZag
 import org.photoni.indicators.data.PriceHistoryConverter
 import org.photoni.indicators.data.Repository
 import org.springframework.stereotype.Controller
@@ -44,7 +45,11 @@ class HtmlController {
                 val tokens = element.split("_")
                 val n = Integer.parseInt(tokens[1])
                 indicator = MA.ema(n, values)
+            } else if (element.startsWith("zigzag")) {
+               ZigZag.zigZag(values)
+                indicator=values
             }
+
 
 
             var indicatorPriceHistory = PriceHistoryConverter.mergeValues(price, indicator)
