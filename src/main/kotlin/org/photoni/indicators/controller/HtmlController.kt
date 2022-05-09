@@ -1,6 +1,7 @@
 package org.photoni.indicators.controller
 
 import com.trendrating.commons.JsonUtil
+import org.photoni.indicators.analysis.Aroon
 import org.photoni.indicators.analysis.MA
 import org.photoni.indicators.analysis.SSO
 import org.photoni.indicators.analysis.ZigZag
@@ -17,7 +18,7 @@ import java.util.*
 class HtmlController {
 
     @GetMapping("/")
-    fun index(model: Model, @RequestParam(required = false) ticker: String?, @RequestParam(required = false) overlays: String?,@RequestParam(required = false) oscillators: String?): String {
+    fun index(model: Model, @RequestParam(required = false) ticker: String?, @RequestParam(required = false) overlays: String?, @RequestParam(required = false) oscillators: String?): String {
         val ticker = ticker ?: "MSFT"
         val overlaysList = overlays?.split(",")
         val oscillatorList = oscillators?.split(",")
@@ -51,10 +52,9 @@ class HtmlController {
                 val n = Integer.parseInt(tokens[1])
                 indicator = MA.ema(n, values)
             } else if (element.startsWith("zigzag")) {
-               ZigZag.zigZag(values)
-                indicator=values
+                ZigZag.zigZag(values)
+                indicator = values
             }
-
 
 
             var indicatorPriceHistory = PriceHistoryConverter.mergeValues(price, indicator)
@@ -69,17 +69,30 @@ class HtmlController {
     private fun computeOscillators(oscillatorList: List<String>?, values: DoubleArray, price: List<Map<String, Any>>, dataset: MutableList<Any>) {
         oscillatorList?.forEach { element ->
             var oscillator = DoubleArray(values.size)
-            if (element.startsWith("sso")) {
-                val tokens = element.split("_")
-                val n = Integer.parseInt(tokens[1])
-                oscillator = SSO.sso(values, n)
-            }
+            when {
+                element.startsWith("sso") -> {
+                    val tokens = element.split("_")
+                    val n = Integer.parseInt(tokens[1])
+                    oscillator = SSO.sso(values, n)
+                }
+                element.startsWith("aroon") -> {
 
+                    val tokens = element.split("_")
+                    val n = Integer.parseInt(tokens[1])
+                    oscillator = Aroon.aroonOscillator(values, 5)
+                }
+                element.startsWith("macdline") -> {
+
+
+                    oscillator = MA.macdSignalLine(values)
+                }
+            }
 
 
             var oscillatorPriceHistory = PriceHistoryConverter.mergeValues(price, oscillator)
             dataset.add(oscillatorPriceHistory)
+
+
         }
     }
-
 }

@@ -58,7 +58,6 @@ object MA {
 
     /**
      * Macd Line
-     * @param n time period
      * @param arr time series
      */
     fun macdLine(arr: DoubleArray): DoubleArray {

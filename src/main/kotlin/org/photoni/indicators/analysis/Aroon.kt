@@ -15,7 +15,7 @@ object Aroon {
 
 
     /**
-     * Slow Stochastic oscillator signal
+     * Aroon oscillator signal
      * @param arr
      * @param days
      * @return smooted Stochastic Oscillator
