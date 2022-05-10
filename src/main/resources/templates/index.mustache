@@ -6,60 +6,43 @@
           var datasetOscillators={{{datasetOscillators}}};
 
 
+      var config=function(height){
+          var config={   chartPadding: 5,
+              height: height+"px",
+              showPoint: false,
+              fullWidth: true,
+              axisX: {
+                type: Chartist.AutoScaleAxis,
+                onlyInteger: true,
+                scaleMinSpace: 60
+              },
+              axisY: {
+                showGrid: true,
+                // Turning off the units here to make it a smaller trendline.
+                offset: 0,
+                labelInterpolationFnc: function(value, index) {
+                    return null;
+                }
+              },
+              plugins: [
+                  Chartist.plugins.zoom({
+                    resetOnRightMouseBtn: true,
+                    onZoom : function(chart, reset) { storeReset(reset); }
+                  })
+              ]
+          }
+
+          return config;
+
+      }
 
       new Chartist.Line('.ct-chart', {
       series: datasetOverlays
-      }, {   chartPadding: 5,
-          height: '800px',
-          showPoint: false,
-          fullWidth: true,
-          axisX: {
-            type: Chartist.AutoScaleAxis,
-            onlyInteger: true,
-            scaleMinSpace: 60
-          },
-          axisY: {
-            showGrid: false,
-            // Turning off the units here to make it a smaller trendline.
-            offset: 0,
-            labelInterpolationFnc: function(value, index) {
-                return null;
-            }
-          },
-          plugins: [
-              Chartist.plugins.zoom({
-                resetOnRightMouseBtn: true,
-                onZoom : function(chart, reset) { storeReset(reset); }
-              })
-          ]
-      });
+      }, config(800));
 
       new Chartist.Line('.ct-chart1', {
       series: datasetOscillators
-      }, {   chartPadding: 5,
-          height: '100px',
-          showPoint: false,
-          fullWidth: true,
-          axisX: {
-            type: Chartist.AutoScaleAxis,
-            onlyInteger: true,
-            scaleMinSpace: 60
-          },
-          axisY: {
-            showGrid: false,
-            // Turning off the units here to make it a smaller trendline.
-            offset: 0,
-            labelInterpolationFnc: function(value, index) {
-                return null;
-            }
-          },
-          plugins: [
-              Chartist.plugins.zoom({
-                resetOnRightMouseBtn: true,
-                onZoom : function(chart, reset) { storeReset(reset); }
-              })
-          ]
-      });
+      }, config(100));
 
 
 
