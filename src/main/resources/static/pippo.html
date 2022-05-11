@@ -4,34 +4,33 @@
     <script>
 window.onload = function () {
 
+var getAxisY = function(color,title){
+    var clr=color? color: "#C24642"
+    var axis={
+            title: title,
+            lineColor: clr,
+            tickColor: clr,
+            labelFontColor: clr,
+            titleFontColor: clr,
+            includeZero: true,
+            suffix: "k"
+        }
+    return axis
+}
+
 var chart = new CanvasJS.Chart("chartContainer", {
 	animationEnabled: true,
 	zoomEnabled: true,
 	theme: "light2",
 	title:{
 		text: "Simple Line Chart"
-	},axisY:[{
-		title: "Order",
-		lineColor: "#C24642",
-		tickColor: "#C24642",
-		labelFontColor: "#C24642",
-		titleFontColor: "#C24642",
-		includeZero: true,
-		suffix: "k"
-	},
-	{
-		title: "Footfall",
-		lineColor: "#369EAD",
-		tickColor: "#369EAD",
-		labelFontColor: "#369EAD",
-		titleFontColor: "#369EAD",
-		includeZero: true,
-		suffix: "k"
-	}],
+	},axisY:[getAxisY("#C24642","overlays"),
+	getAxisY("#369EAD","oscillators")],
 	data: [{
 		type: "line",
       	indexLabelFontSize: 16,
-      	axisYIndex: 1,
+      	axisYIndex: 0,
+      	color: "#C24642",
 		dataPoints: [
 			{ y: 450,x:10},
 			{ y: 414,x:15},
@@ -49,7 +48,8 @@ var chart = new CanvasJS.Chart("chartContainer", {
 	},{
 		type: "line",
       	indexLabelFontSize: 16,
-      	axisYIndex: 0,
+      	axisYIndex: 1,
+      	color: "#369EAD",
 		dataPoints: [
 			{ y: 0.5,x:10},
 			{ y: 0.6,x:15},
